@@ -1,11 +1,17 @@
 package jvpro.homework.lesson02;
 
 public class Employee {
+
+    enum Job {
+        ENGINEER, MANAGER, ACCOUNTANT
+    }
+
+
     private String name;
     private int age;
-    private String job;
+    private Job job;
 
-    public Employee(String name, int age, String job) {
+    public Employee(String name, int age, Job job) {
         this.name = name;
         this.age = age;
         this.job = job;
@@ -27,17 +33,16 @@ public class Employee {
         this.age = age;
     }
 
-    public String getJob() {
+    public Job getJob() {
         return job;
     }
 
-    public void setJob(String job) {
+    public void setJob(Job job) {
         this.job = job;
     }
 
     @Override
     public String toString() {
-        return String.format("{name: %s, age: %s, job: %s}",name,age,job);
+        return String.format("{name: %s, age: %s, job: %s}", name, age, job);
     }
-
 }
