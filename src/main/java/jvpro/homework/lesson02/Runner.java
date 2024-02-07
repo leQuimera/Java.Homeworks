@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 public class Runner {
 
-    public static final String POSITION_ENGINEER = "ENGINEER";
     private static final List<Integer> TEST_INT_LIST = List.of(5, 2, 10, 9, 4, 3, 10, 1, 13);
     private static final List<Employee> EMPLOYEES = List.of(
             new Employee("Иван", 41, Employee.Job.ACCOUNTANT),
@@ -68,7 +67,7 @@ public class Runner {
     //    Имеется список объектов типа Сотрудник (имя, возраст, должность), необходимо получить список имен 3 самых старших сотрудников с должностью «Инженер», в порядке убывания возраста
     private static String findThirdEmployeesEngineers(List<Employee> list) {
         return list.stream()
-                .filter(employee -> Objects.equals(employee.getJob().toString(), POSITION_ENGINEER))
+                .filter(employee -> Objects.equals(employee.getJob(), Employee.Job.ENGINEER))
                 .sorted(Comparator.comparing(Employee::getAge).reversed())
                 .map(Employee::getName)
                 .collect(Collectors.toList())
@@ -79,7 +78,7 @@ public class Runner {
     //    Имеется список объектов типа Сотрудник (имя, возраст, должность), посчитайте средний возраст сотрудников с должностью «Инженер»
     private static Double findAverageAgeForEngineers(List<Employee> list) {
         return list.stream()
-                .filter(employee -> Objects.equals(employee.getJob().toString(), POSITION_ENGINEER))
+                .filter(employee -> Objects.equals(employee.getJob().toString(), Employee.Job.ENGINEER))
                 .mapToInt(Employee::getAge)
                 .average()
                 .getAsDouble();
