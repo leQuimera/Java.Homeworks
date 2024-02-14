@@ -15,19 +15,15 @@ public class MainApp {
 
     public static void main(String[] args) {
 
-        ThreadPool newPool = new ThreadPool(3);
+        ThreadPool newPool = new ThreadPool(2);
         for (int i = 0; i < 10; i++) {
-            int finalI = i;
-            Runnable task = () -> {
-                System.out.println("Task is ready " + finalI);
-                try {
-                    System.out.println("Task is running " + finalI);
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            };
-            newPool.execute(task);
+            int count = i;
+            newPool.execute(() -> {
+                System.out.println("Task step1 - " + count);
+                System.out.println("Task step2 - " + count);
+                System.out.println("Task step3 - " + count);
+                System.out.println("End of task - " + count);
+            });
         }
         newPool.shutdown();
     }

@@ -5,19 +5,17 @@ import java.util.LinkedList;
 
 public class ThreadPool {
 
-    private boolean isStopped = false;   //Чтоб выйти
+    private boolean isStopped = false;
     private int capacity;
     private LinkedList<Runnable> tasksPool;
-    private NewPoolThread[] newPoolThreads;  //пучок потоков, запускаемых в конструкторе
+    private NewPoolThread[] newPoolThreads;
 
     public ThreadPool(int capacity) {
         this.capacity = capacity;
         this.tasksPool = new LinkedList<>();
         newPoolThreads = new NewPoolThread[capacity];
 
-        //Создаем пучок
         for (int i = 0; i < capacity; i++) {
-            int finalI = i;
             newPoolThreads[i] = new NewPoolThread();
             newPoolThreads[i].start();
         }
@@ -28,7 +26,6 @@ public class ThreadPool {
             throw new IllegalStateException("Потоки уже остановлены");
         }
         tasksPool.addLast(r);
-        //System.out.println("Выполняем");
         notify();
     }
 
@@ -41,13 +38,31 @@ public class ThreadPool {
 
 
     private class NewPoolThread extends Thread {
-        //Тут обработчик
         @Override
         public void run() {
-            System.out.println("Выполняем");
+            Runnable task;
+            while (true) {
+                synchronized (ThreadPool.this) {
+                    while (tasksPool.isEmpty() && !isStopped) {
+                        try {
+                            ThreadPool.this.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                    }
+                    if (tasksPool.isEmpty() && isStopped) {
+                        return;
+                    }
+                    task = tasksPool.removeFirst();
+                }
+                try {
+                    task.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
     }
-
-
 }
